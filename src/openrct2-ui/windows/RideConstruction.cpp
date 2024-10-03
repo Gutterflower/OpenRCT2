@@ -524,6 +524,7 @@ namespace OpenRCT2::Ui::Windows
                     }
                     break;
                 case TrackPitch::Down25:
+                case TrackPitch::Down12:
                     disabledWidgets |= (1uLL << WIDX_SLOPE_UP) | (1uLL << WIDX_SLOPE_UP_STEEP);
                     break;
                 case TrackPitch::Down60:
@@ -537,6 +538,7 @@ namespace OpenRCT2::Ui::Windows
                     }
                     break;
                 case TrackPitch::Up25:
+                case TrackPitch::Up12:
                     disabledWidgets |= (1uLL << WIDX_SLOPE_DOWN_STEEP) | (1uLL << WIDX_SLOPE_DOWN);
                     break;
                 case TrackPitch::Up60:
@@ -828,6 +830,18 @@ namespace OpenRCT2::Ui::Windows
                         disabledWidgets &= ~(1uLL << WIDX_SLOPE_UP_STEEP);
                 }
             }
+
+
+            if (IsTrackEnabled(TrackGroup::ShallowSlopes))
+            {
+                // If the bank is none, attempt to show shallow slopes
+                if (_currentTrackRollEnd == TrackRoll::None)
+                disabledWidgets &= ~(1uLL << WIDX_SLOPE_DOWN_STEEP);
+                disabledWidgets &= ~(1uLL << WIDX_SLOPE_UP_STEEP);
+            }	
+
+
+
             if (IsTrackEnabled(TrackGroup::slopeCurveBanked))
             {
                 if (_rideConstructionState == RideConstructionState::Front)
@@ -1176,6 +1190,46 @@ namespace OpenRCT2::Ui::Windows
                             }
                         }
                     }
+
+
+                    if (IsTrackEnabled(TrackGroup::ShallowSlopes))
+                    {
+                        if (_currentTrackPitchEnd == TrackPitch::None)
+                        {
+                            _currentTrackPitchEnd = TrackPitch::Down12;
+
+                            _currentTrackPrice = kMoney64Undefined;
+                            WindowRideConstructionUpdateActiveElements();
+                            break;
+                        }
+                        else if (_currentTrackPitchEnd == TrackPitch::Down12)
+                        {
+                            _currentTrackPitchEnd = TrackPitch::Down12;
+
+                            _currentTrackPrice = kMoney64Undefined;
+                            WindowRideConstructionUpdateActiveElements();
+                            break;
+                        }
+                        else if (_currentTrackPitchEnd == TrackPitch::Down25)
+                        {
+                            _currentTrackPitchEnd = TrackPitch::Down12;
+
+                            _currentTrackPrice = kMoney64Undefined;
+                            WindowRideConstructionUpdateActiveElements();
+                            break;
+                        }
+                        else if (_currentTrackPitchEnd == TrackPitch::Up12)
+                        {
+                            _currentTrackPitchEnd = TrackPitch::Down12;
+
+                            _currentTrackPrice = kMoney64Undefined;
+                            WindowRideConstructionUpdateActiveElements();
+                            break;
+                        }
+                    }
+
+
+
                     if (widgets[WIDX_SLOPE_DOWN_STEEP].tooltip == STR_RIDE_CONSTRUCTION_STEEP_SLOPE_DOWN_TIP)
                     {
                         UpdateLiftHillSelected(TrackPitch::Down60);
@@ -1311,6 +1365,45 @@ namespace OpenRCT2::Ui::Windows
                             }
                         }
                     }
+
+
+                    if (IsTrackEnabled(TrackGroup::ShallowSlopes))
+                    {
+                        if (_currentTrackPitchEnd == TrackPitch::None)
+                        {
+                            _currentTrackPitchEnd = TrackPitch::Up12;
+
+                            _currentTrackPrice = kMoney64Undefined;
+                            WindowRideConstructionUpdateActiveElements();
+                            break;
+                        }
+                        else if (_currentTrackPitchEnd == TrackPitch::Up12)
+                        {
+                            _currentTrackPitchEnd = TrackPitch::Up12;
+
+                            _currentTrackPrice = kMoney64Undefined;
+                            WindowRideConstructionUpdateActiveElements();
+                            break;
+                        }
+                        else if (_currentTrackPitchEnd == TrackPitch::Up25)
+                        {
+                            _currentTrackPitchEnd = TrackPitch::Up12;
+
+                            _currentTrackPrice = kMoney64Undefined;
+                            WindowRideConstructionUpdateActiveElements();
+                            break;
+                        }
+                        else if (_currentTrackPitchEnd == TrackPitch::Down25)
+                        {
+                            _currentTrackPitchEnd = TrackPitch::Up12;
+
+                            _currentTrackPrice = kMoney64Undefined;
+                            WindowRideConstructionUpdateActiveElements();
+                            break;
+                        }
+                    }
+
+
                     if (widgets[WIDX_SLOPE_UP_STEEP].tooltip == STR_RIDE_CONSTRUCTION_STEEP_SLOPE_UP_TIP)
                     {
                         UpdateLiftHillSelected(TrackPitch::Up60);
@@ -1753,6 +1846,12 @@ namespace OpenRCT2::Ui::Windows
                 }
             }
 
+            if (IsTrackEnabled(TrackGroup::ShallowSlopes) && _currentTrackRollEnd == TrackRoll::None)
+            {
+                widgets[WIDX_SLOPE_DOWN_STEEP].type = WindowWidgetType::FlatBtn;
+                widgets[WIDX_SLOPE_UP_STEEP].type = WindowWidgetType::FlatBtn;
+            }
+
             if (IsTrackEnabled(TrackGroup::slopeSteepDown))
             {
                 widgets[WIDX_SLOPE_DOWN_STEEP].type = WindowWidgetType::FlatBtn;
@@ -1882,6 +1981,31 @@ namespace OpenRCT2::Ui::Windows
                     widgets[WIDX_SLOPE_UP].right = tmp;
                 }
             }
+
+            if ((IsTrackEnabled(TrackGroup::ShallowSlopes)))
+
+            {
+                widgets[WIDX_SLOPE_DOWN_STEEP].image = ImageId(SPR_RIDE_CONSTRUCTION_HELIX_DOWN);
+                widgets[WIDX_SLOPE_DOWN_STEEP].tooltip = STR_RIDE_CONSTRUCTION_SHALLOW_SLOPE_DOWN_TIP;
+                widgets[WIDX_SLOPE_UP_STEEP].image = ImageId(SPR_RIDE_CONSTRUCTION_HELIX_UP);
+                widgets[WIDX_SLOPE_UP_STEEP].tooltip = STR_RIDE_CONSTRUCTION_SHALLOW_SLOPE_UP_TIP;
+
+                int32_t tmp = widgets[WIDX_SLOPE_DOWN_STEEP].left;
+                widgets[WIDX_SLOPE_DOWN_STEEP].left = widgets[WIDX_SLOPE_DOWN].left;
+                widgets[WIDX_SLOPE_DOWN].left = tmp;
+
+                tmp = widgets[WIDX_SLOPE_DOWN_STEEP].right;
+                widgets[WIDX_SLOPE_DOWN_STEEP].right = widgets[WIDX_SLOPE_DOWN].right;
+                widgets[WIDX_SLOPE_DOWN].right = tmp;
+
+                tmp = widgets[WIDX_SLOPE_UP_STEEP].left;
+                widgets[WIDX_SLOPE_UP_STEEP].left = widgets[WIDX_SLOPE_UP].left;
+                widgets[WIDX_SLOPE_UP].left = tmp;
+
+                tmp = widgets[WIDX_SLOPE_UP_STEEP].right;
+                widgets[WIDX_SLOPE_UP_STEEP].right = widgets[WIDX_SLOPE_UP].right;
+                widgets[WIDX_SLOPE_UP].right = tmp;
+            }	
 
             widgets[WIDX_BANKING_GROUPBOX].image = ImageId(STR_RIDE_CONSTRUCTION_ROLL_BANKING);
             widgets[WIDX_BANK_LEFT].image = ImageId(SPR_RIDE_CONSTRUCTION_LEFT_BANK);
@@ -2090,6 +2214,7 @@ namespace OpenRCT2::Ui::Windows
             {
                 case TrackPitch::Down60:
                 case TrackPitch::Up90:
+                case TrackPitch::Down12:
                     widgetIndex = WIDX_SLOPE_DOWN_STEEP;
                     break;
                 case TrackPitch::Down25:
@@ -2100,6 +2225,7 @@ namespace OpenRCT2::Ui::Windows
                     break;
                 case TrackPitch::Up60:
                 case TrackPitch::Down90:
+                case TrackPitch::Up12:
                     widgetIndex = WIDX_SLOPE_UP_STEEP;
                     break;
                 default:

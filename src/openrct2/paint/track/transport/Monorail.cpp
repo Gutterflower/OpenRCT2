@@ -1231,6 +1231,8 @@ static void PaintMonorailTrackDiag25DegDownToFlat(
     PaintUtilSetGeneralSupportHeight(session, height + 48);
 }
 
+
+
 /**
  * rct2: 0x008ADF34
  */
@@ -1300,6 +1302,8 @@ TRACK_PAINT_FUNCTION GetTrackPaintFunctionMonorail(int32_t trackType)
             return PaintMonorailTrackDiagFlatTo25DegDown;
         case TrackElemType::DiagDown25ToFlat:
             return PaintMonorailTrackDiag25DegDownToFlat;
+
+
     }
 
     return nullptr;

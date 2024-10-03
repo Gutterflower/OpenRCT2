@@ -55,7 +55,7 @@ namespace OpenRCT2::TrackMetaData
         R9
     };
 
-    extern const TrackDescriptor gTrackDescriptors[186];
+    extern const TrackDescriptor gTrackDescriptors[192];
 
     struct DodgemsTrackSize
     {

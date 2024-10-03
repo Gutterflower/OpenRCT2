@@ -367,6 +367,12 @@ namespace OpenRCT2::TrackMetaData
             { 4, 1, 0,-48, -32, 64 },  // TrackElemType::RightEighthBankToOrthogonalDown25     
             { 4, 4, 0, 0, -32, 32 },    // TrackElemType::DiagBrakes
             { 4, 4, 0, 0, -32, 32 },    // TrackElemType::DiagBlockBrakes
+			{ 0, 0, 0, 16, -32, 0 },      // ELEM_12_DEG_UP	
+			{ 0, 0, 16, 0, -32, 0 },      // ELEM_12_DEG_DOWN		
+			{ 0, 0, 0, 8, 0, 0 },       // ELEM_FLAT_TO_12_DEG_UP	
+			{ 0, 0, 8, 0, 0, 0 },       // ELEM_FLAT_TO_12_DEG_DOWN	
+			{ 0, 0, 0, 8, 0, 0 },       // ELEM_25_DEG_UP_TO_FLAT			
+			{ 0, 0, 8, 0, 0, 0 },       // ELEM_25_DEG_DOWN_TO_FLAT	
     };
     static_assert(std::size(_trackCoordinates) == TrackElemType::Count);
     
@@ -710,6 +716,12 @@ namespace OpenRCT2::TrackMetaData
         92, // TrackElemType::RightEighthBankToOrthogonalDown25
         45, // TrackElemType::DiagBrakes
         45, // TrackElemType::DiagBlockBrakes
+		66, // TrackElemType::Up12
+		66, // TrackElemType::Down12
+		32, // TrackElemType::FlatToUp12
+		32, // TrackElemType::FlatToDown12
+		32, // TrackElemType::Up12ToFlat
+		32, // TrackElemType::Down12ToFlat
     };
     static_assert(std::size(TrackPieceLengths) == TrackElemType::Count);
     
@@ -1054,10 +1066,16 @@ namespace OpenRCT2::TrackMetaData
         { TrackCurve::RightLarge, TrackCurve::RightLarge }, // TrackElemType::RightEighthBankToOrthogonalDown25     
         { TrackElemType::DiagBrakes, TrackElemType::DiagBrakes }, // TrackElemType::DiagBrakes
         { TrackCurve::None, TrackCurve::None }, // TrackElemType::DiagBlockBrakes
+		{ TrackCurve::None, TrackCurve::None }, // TrackElemType::Up12
+		{ TrackCurve::None, TrackCurve::None }, // TrackElemType::Down12
+        { TrackCurve::None, TrackCurve::None }, // TrackElemType::FlatToUp12
+        { TrackCurve::None, TrackCurve::None }, // TrackElemType::FlatToDown12
+        { TrackCurve::None, TrackCurve::None }, // TrackElemType::Up12ToFlat
+        { TrackCurve::None, TrackCurve::None }, // TrackElemType::Down12ToFlat
     };
     static_assert(std::size(gTrackCurveChain) == TrackElemType::Count);
     
-    const TrackDescriptor gTrackDescriptors[186] = {
+    const TrackDescriptor gTrackDescriptors[192] = {
         {   true,   TrackPitch::Down60,    TrackRoll::None,    TrackCurve::None,               TrackPitch::Down60,    TrackRoll::None,    TrackElemType::DiagDown60                                     },
         {   true,   TrackPitch::Down60,    TrackRoll::None,    TrackCurve::None,               TrackPitch::Down25,    TrackRoll::None,    TrackElemType::DiagDown60ToDown25                      },
         {   true,   TrackPitch::Down60,    TrackRoll::None,    TrackCurve::None,               TrackPitch::None,       TrackRoll::None,    TrackElemType::DiagDown60ToFlat                             },
@@ -1243,7 +1261,13 @@ namespace OpenRCT2::TrackMetaData
         {   true,   TrackPitch::Up25,      TrackRoll::Left,    TrackCurve::LeftLarge,         TrackPitch::Up25,      TrackRoll::Left,    TrackElemType::LeftEighthBankToOrthogonalUp25         }, // TrackElemType::LeftEighthBankToOrthogonalUp25
         {   true,   TrackPitch::Up25,      TrackRoll::Right,   TrackCurve::RightLarge,        TrackPitch::Up25,      TrackRoll::Right,   TrackElemType::RightEighthBankToOrthogonalUp25        }, // TrackElemType::RightEighthBankToOrthogonalUp25 
         {   true,   TrackPitch::Down25,    TrackRoll::Left,    TrackCurve::LeftLarge,         TrackPitch::Down25,    TrackRoll::Left,    TrackElemType::LeftEighthBankToOrthogonalDown25       }, // TrackElemType::LeftEighthBankToOrthogonalDown25
-        {   true,   TrackPitch::Down25,    TrackRoll::Right,   TrackCurve::RightLarge,        TrackPitch::Down25,    TrackRoll::Right,   TrackElemType::RightEighthBankToOrthogonalDown25      }, // TrackElemType::RightEighthBankToOrthogonalDown25     
+        {   true,   TrackPitch::Down25,    TrackRoll::Right,   TrackCurve::RightLarge,        TrackPitch::Down25,    TrackRoll::Right,   TrackElemType::RightEighthBankToOrthogonalDown25      }, // TrackElemType::RightEighthBankToOrthogonalDown25
+        {   false,  TrackPitch::Up12,      TrackRoll::None,    TrackCurve::None,              TrackPitch::Up12,      TrackRoll::None,    TrackElemType::Up12                                   }, // TrackElemType::Up12
+		{   false,  TrackPitch::Down12,    TrackRoll::None,    TrackCurve::None,              TrackPitch::Down12,    TrackRoll::None,    TrackElemType::Down12	                               }, // TrackElemType::Down12
+		{   false,  TrackPitch::None,      TrackRoll::None,    TrackCurve::None,              TrackPitch::Up12,      TrackRoll::None,    TrackElemType::FlatToUp12  		                   }, // TrackElemType::FlatToUp12
+		{   false,  TrackPitch::None,      TrackRoll::None,    TrackCurve::None,              TrackPitch::Down12,    TrackRoll::None,    TrackElemType::FlatToDown12                           }, // TrackElemType::FlatToDown12
+		{   false,  TrackPitch::Up12,      TrackRoll::None,    TrackCurve::None,              TrackPitch::None,      TrackRoll::None,    TrackElemType::Up12ToFlat                             }, // TrackElemType::Up12ToFlat
+		{   false,  TrackPitch::Down12,    TrackRoll::None,    TrackCurve::None,              TrackPitch::None,      TrackRoll::None,    TrackElemType::Down12ToFlat                           }, // TrackElemType::Down12ToFlat	
     };
     
     /** rct2: 0x00993D1C */
@@ -1587,6 +1611,12 @@ namespace OpenRCT2::TrackMetaData
         TrackElemType::None, // TrackElemType::RightEighthBankToOrthogonalDown25
         TrackElemType::None, // TrackElemType::DiagBrakes
         TrackElemType::None, // TrackElemType::DiagBlockBrakes
+        TrackElemType::None, // TrackElemType::Up12
+        TrackElemType::None, // TrackElemType::Down12
+        TrackElemType::None, // TrackElemType::FlatToUp12
+        TrackElemType::None, // TrackElemType::FlatToDown12
+        TrackElemType::None, // TrackElemType::Up12ToFlat
+        TrackElemType::None, // TrackElemType::Down12ToFlat
     };
     static_assert(std::size(AlternativeTrackTypes) == TrackElemType::Count);
     
@@ -1931,6 +1961,12 @@ namespace OpenRCT2::TrackMetaData
         233281, // TrackElemType::RightEighthBankToOrthogonalDown25
         123456, // TrackElemType::DiagBrakes
         123456, // TrackElemType::DiagBlockBrakes
+		159744,  // TrackElemType::Up12	
+		159744,  // TrackElemType::Down12			
+		73728,  // TrackElemType::FlatToUp12
+		73728,  // TrackElemType::FlatToDown12
+		73728,  // TrackElemType::Up12ToFlat
+		73728,  // TrackElemType::Down12ToFlat	
     };
     
     
@@ -2278,6 +2314,12 @@ namespace OpenRCT2::TrackMetaData
         TrackElemType::LeftEighthBankToOrthogonalDown25,      // TrackElemType::LeftEighthBankToOrthogonalDown25
         TrackElemType::DiagBrakes,
         TrackElemType::DiagBlockBrakes,
+        TrackElemType::Up12,                                  // TrackElemType::Up12
+		TrackElemType::Down12,                                // TrackElemType::Down12	
+		TrackElemType::FlatToUp12,                            // TrackElemType::FlatToUp12
+		TrackElemType::FlatToDown12,                          // TrackElemType::FlatToDown12
+		TrackElemType::Up12ToFlat,                            // TrackElemType::Up12ToFlat
+		TrackElemType::Down12ToFlat,                          // TrackElemType::Down12ToFlat	
     };
     static_assert(std::size(TrackElementMirrorMap) == TrackElemType::Count);
     
@@ -2622,6 +2664,12 @@ namespace OpenRCT2::TrackMetaData
         (1 << 0) | (1 << 4), // TrackElemType::LeftEighthBankToOrthogonalDown25
         (1 << 0), // TrackElemType::DiagBrakes
         (1 << 0), // TrackElemType::DiagBlockBrakes
+		(1 << 0), // TrackElemType::Up12
+		(1 << 0), // TrackElemType::Down12
+		(1 << 0), // TrackElemType::FlatToUp12
+		(1 << 0), // TrackElemType::FlatToDown12
+		(1 << 0), // TrackElemType::Up12ToFlat
+		(1 << 0), // TrackElemType::Down12ToFlat
     };
     static_assert(std::size(TrackHeightMarkerPositions) == TrackElemType::Count);
     
@@ -2967,8 +3015,14 @@ namespace OpenRCT2::TrackMetaData
         /* TrackElemType::RightEighthBankToOrthogonalUp25        */   TRACK_ELEM_FLAG_TURN_RIGHT | TRACK_ELEM_FLAG_TURN_SLOPED | TRACK_ELEM_FLAG_UP   | TRACK_ELEM_FLAG_STARTS_AT_HALF_HEIGHT | TRACK_ELEM_FLAG_ALLOW_LIFT_HILL | TRACK_ELEM_FLAG_CURVE_ALLOWS_LIFT,  
         /* TrackElemType::LeftEighthBankToOrthogonalDown25       */   TRACK_ELEM_FLAG_TURN_LEFT  | TRACK_ELEM_FLAG_TURN_SLOPED | TRACK_ELEM_FLAG_DOWN | TRACK_ELEM_FLAG_STARTS_AT_HALF_HEIGHT | TRACK_ELEM_FLAG_ALLOW_LIFT_HILL | TRACK_ELEM_FLAG_CURVE_ALLOWS_LIFT,  
         /* TrackElemType::RightEighthBankToOrthogonalDown25      */   TRACK_ELEM_FLAG_TURN_RIGHT | TRACK_ELEM_FLAG_TURN_SLOPED | TRACK_ELEM_FLAG_DOWN | TRACK_ELEM_FLAG_STARTS_AT_HALF_HEIGHT | TRACK_ELEM_FLAG_ALLOW_LIFT_HILL | TRACK_ELEM_FLAG_CURVE_ALLOWS_LIFT,  
-        /* TrackElemType::DiagBrakes                                    */   0,
-        /* TrackElemType::DiagBlockBrakes                               */   0,
+        /* TrackElemType::DiagBrakes                             */   0,
+        /* TrackElemType::DiagBlockBrakes                        */   0,
+		/* TrackElemType::Up12                                   */   TRACK_ELEM_FLAG_UP | TRACK_ELEM_FLAG_STARTS_AT_HALF_HEIGHT,
+		/* TrackElemType::Down12                                 */   TRACK_ELEM_FLAG_DOWN | TRACK_ELEM_FLAG_STARTS_AT_HALF_HEIGHT,	
+		/* TrackElemType::FlatToUp12                             */   TRACK_ELEM_FLAG_UP,
+		/* TrackElemType::FlatToDown12                           */   TRACK_ELEM_FLAG_DOWN,
+		/* TrackElemType::Up12ToFlat                             */   TRACK_ELEM_FLAG_UP,
+		/* TrackElemType::Down12ToFlat                           */   TRACK_ELEM_FLAG_DOWN,
     };
     static_assert(std::size(TrackFlags) == TrackElemType::Count);
     // clang-format on
@@ -3317,6 +3371,12 @@ namespace OpenRCT2::TrackMetaData
         { TrackGroup::slopeCurveLargeBanked,             TrackPitch::Down25,           TrackPitch::Down25,         TrackRoll::Right,       TrackRoll::Right,    -16    }, // TrackElemType::RightEighthBankToOrthogonalDown25
         { TrackGroup::diagBrakes,                        TrackPitch::None,             TrackPitch::None,           TrackRoll::None,        TrackRoll::None,        0   }, // TrackElemType::DiagBrakes
         { TrackGroup::diagBlockBrakes,                   TrackPitch::None,             TrackPitch::None,           TrackRoll::None,        TrackRoll::None,        0   }, // TrackElemType::DiagBlockBrakes
+        { TrackGroup::ShallowSlopes,                     TrackPitch::Up12,             TrackPitch::Up12,           TrackRoll::None,        TrackRoll::None,        0   }, // TrackElemType::Up12
+        { TrackGroup::ShallowSlopes,                     TrackPitch::Down12,           TrackPitch::Down12,         TrackRoll::None,        TrackRoll::None,        0   }, // TrackElemType::Down12
+        { TrackGroup::ShallowSlopes,                     TrackPitch::None,             TrackPitch::Up12,           TrackRoll::None,        TrackRoll::None,        0   }, // TrackElemType::FlatToUp12
+        { TrackGroup::ShallowSlopes,                     TrackPitch::None,             TrackPitch::Down12,         TrackRoll::None,        TrackRoll::None,        0   }, // TrackElemType::FlatToDown12
+        { TrackGroup::ShallowSlopes,                     TrackPitch::Up12,             TrackPitch::None,           TrackRoll::None,        TrackRoll::None,        0   }, // TrackElemType::Up12ToFlat
+        { TrackGroup::ShallowSlopes,                     TrackPitch::Down12,           TrackPitch::None,           TrackRoll::None,        TrackRoll::None,        0   }, // TrackElemType::Down12ToFlat
     };
     static_assert(std::size(TrackDefinitions) == TrackElemType::Count);
 
@@ -3379,7 +3439,8 @@ namespace OpenRCT2::TrackMetaData
         SpinFunction::None, SpinFunction::None, SpinFunction::None, SpinFunction::None, SpinFunction::None, SpinFunction::None,
         SpinFunction::None, SpinFunction::None, SpinFunction::None, SpinFunction::None, SpinFunction::None, SpinFunction::L9,
         SpinFunction::R9,   SpinFunction::L9,   SpinFunction::R9,   SpinFunction::L9,   SpinFunction::R9,   SpinFunction::L9,
-        SpinFunction::R9,   SpinFunction::None, SpinFunction::None,
+        SpinFunction::R9,   SpinFunction::None, SpinFunction::None, SpinFunction::None, SpinFunction::None, SpinFunction::None,
+        SpinFunction::None, SpinFunction::None, SpinFunction::None,
     };
     static_assert(std::size(TrackTypeToSpinFunction) == TrackElemType::Count);
 
@@ -3549,9 +3610,11 @@ namespace OpenRCT2::TrackMetaData
             case TrackElemType::EndStation:
             case TrackElemType::BeginStation:
             case TrackElemType::MiddleStation:
+            case TrackElemType::Up12:
             case TrackElemType::Up25:
             case TrackElemType::Up60: //
             case TrackElemType::Down25:
+            case TrackElemType::Down12:	
             case TrackElemType::Down60: //
             case TrackElemType::FlatToLeftBank:
             case TrackElemType::FlatToRightBank:
@@ -3616,7 +3679,9 @@ namespace OpenRCT2::TrackMetaData
             case TrackElemType::LeftQuarterTurn1TileDown90:
             case TrackElemType::RightQuarterTurn1TileDown90:
                 return EvaluatorConst<0>;
+            case TrackElemType::FlatToUp12:   //
             case TrackElemType::FlatToUp25:   //
+            case TrackElemType::Down12ToFlat: //
             case TrackElemType::Down25ToFlat: //
             case TrackElemType::LeftBankToUp25:
             case TrackElemType::RightBankToUp25:
@@ -3662,7 +3727,9 @@ namespace OpenRCT2::TrackMetaData
             case TrackElemType::DiagDown25RightBanked:
                 return EvaluatorConst<0>;
             case TrackElemType::Up25ToFlat:   //
+            case TrackElemType::Up12ToFlat:   //
             case TrackElemType::FlatToDown25: //
+            case TrackElemType::FlatToDown12: //	
             case TrackElemType::Up25ToLeftBank:
             case TrackElemType::Up25ToRightBank:
             case TrackElemType::LeftBankToDown25:
@@ -3941,8 +4008,10 @@ namespace OpenRCT2::TrackMetaData
             case TrackElemType::EndStation:
             case TrackElemType::BeginStation:
             case TrackElemType::MiddleStation:
+            case TrackElemType::Up12:
             case TrackElemType::Up25:
             case TrackElemType::Up60: //
+            case TrackElemType::Down12:
             case TrackElemType::Down25:
             case TrackElemType::Down60: //
             case TrackElemType::FlatToLeftBank:
@@ -4030,6 +4099,8 @@ namespace OpenRCT2::TrackMetaData
                 return EvaluatorConst<0>;
             case TrackElemType::FlatToUp25:   //
             case TrackElemType::Down25ToFlat: //
+            case TrackElemType::FlatToUp12:   //
+            case TrackElemType::Down12ToFlat: //	
             case TrackElemType::LeftBankToUp25:
             case TrackElemType::RightBankToUp25:
             case TrackElemType::Down25ToLeftBank:
@@ -4047,6 +4118,8 @@ namespace OpenRCT2::TrackMetaData
                 return EvaluatorConst<103>;
             case TrackElemType::Up25ToFlat:   //
             case TrackElemType::FlatToDown25: //
+            case TrackElemType::Up12ToFlat:   //
+            case TrackElemType::FlatToDown12: //	
             case TrackElemType::Up25ToLeftBank:
             case TrackElemType::Up25ToRightBank:
             case TrackElemType::LeftBankToDown25:
@@ -4671,7 +4744,14 @@ namespace OpenRCT2::TrackMetaData
         STR_EMPTY,                         // TrackElemType::LeftEighthBankToOrthogonalDown25
         STR_EMPTY,                         // TrackElemType::RightEighthBankToOrthogonalDown25
         STR_BRAKES,                        // TrackElemType::DiagBrakes
-        STR_BLOCK_BRAKES                   // TrackElemType::DiagBlockBrakes
+        STR_BLOCK_BRAKES,                   // TrackElemType::DiagBlockBrakes
+        STR_EMPTY,                         // TrackElemType::Up12
+        STR_EMPTY,                         // TrackElemType::Down12     
+        STR_EMPTY,                         // TrackElemType::FlatToUp12 
+        STR_EMPTY,                         // TrackElemType::FlatToDown12 
+        STR_EMPTY,                         // TrackElemType::Up12ToFlat 
+        STR_EMPTY                         // TrackElemType::Down12ToFlat 
+
     };
     static_assert(std::size(RideConfigurationStringIds) == TrackElemType::Count);
 
@@ -11694,6 +11774,54 @@ namespace OpenRCT2::TrackMetaData
         .clearance = { -32, 32, 0, 0, { 0b0010, 0 }, 0 },
     };
 
+    static constexpr SequenceDescriptor kUp12Seq0 = {
+        .clearance = { 0, 0, 0, 8, { 0b1111, 0b1100 }, 0 },
+        .allowedWallEdges = 0b1010,
+        .metalSupports = { MetalSupportPlace::Centre, true },
+    };
+
+    static constexpr SequenceDescriptor kUp12Seq1 = {
+        .clearance = { -32, 0, 0, 16, { 0b1111, 0b1100 }, 0 },
+        .allowedWallEdges = 0b1010,
+        .metalSupports = { MetalSupportPlace::Centre, true },
+    };
+
+    static constexpr SequenceDescriptor kDown12Seq0 = {
+        .clearance = { 0, 0, 0, 8, { 0b1111, 0b0011 }, 0 },
+        .allowedWallEdges = 0b1010,
+        .metalSupports = { MetalSupportPlace::Centre, true },
+    };
+
+    static constexpr SequenceDescriptor kDown12Seq1 = {
+        .clearance = { -32, 0, 0, 16, { 0b1111, 0b0011 }, 0 },
+        .allowedWallEdges = 0b1010,
+        .metalSupports = { MetalSupportPlace::Centre, true },
+    };
+
+    static constexpr SequenceDescriptor kFlatToUp12Seq0 = {
+        .clearance = { 0, 0, 0, 8, { 0b1111, 0 }, 0 },
+        .allowedWallEdges = 0b1010,
+        .metalSupports = { MetalSupportPlace::Centre, true },
+    };
+
+    static constexpr SequenceDescriptor kFlatToDown12Seq0 = {
+        .clearance = { 0, 0, 0, 8, { 0b1111, 0b0011 }, 0 },
+        .allowedWallEdges = 0b1010,
+        .metalSupports = { MetalSupportPlace::Centre, true },
+    };
+
+    static constexpr SequenceDescriptor kUp12ToFlatSeq0 = {
+        .clearance = { 0, 0, 0, 8, { 0b1111, 0b1100 }, 0 },
+        .allowedWallEdges = 0b1010,
+        .metalSupports = { MetalSupportPlace::Centre, true },
+    };
+
+    static constexpr SequenceDescriptor kDown12ToFlatSeq0 = {
+        .clearance = { 0, 0, 0, 8, { 0b1111, 0 }, 0 },
+        .allowedWallEdges = 0b1010,
+        .metalSupports = { MetalSupportPlace::Centre, true },
+    };
+
     static constexpr SequenceData kSequenceDescriptorsByElement[] = {
         /* TrackElemType::Flat */ { 1, { kFlatSeq0 } },
         /* TrackElemType::EndStation */ { 1, { kEndStationSeq0 } },
@@ -12587,6 +12715,13 @@ namespace OpenRCT2::TrackMetaData
         /* TrackElemType::DiagBrakes */ { 4, { kDiagBrakesSeq0, kDiagBrakesSeq1, kDiagBrakesSeq2, kDiagBrakesSeq3 } },
         /* TrackElemType::DiagBlockBrakes */
         { 4, { kDiagBlockBrakesSeq0, kDiagBlockBrakesSeq1, kDiagBlockBrakesSeq2, kDiagBlockBrakesSeq3 } },
+        /* TrackElemType::Up12 */ { 2, { kUp12Seq0, kUp12Seq1 } },
+        /* TrackElemType::Down12 */ { 2, { kDown12Seq0, kDown12Seq1 } },
+        /* TrackElemType::Up12 */ { 1, { kFlatToUp12Seq0 } },
+        /* TrackElemType::Down12 */ { 1, { kFlatToDown12Seq0 } },
+        /* TrackElemType::Up12 */ { 1, { kUp12ToFlatSeq0 } },
+        /* TrackElemType::Down12 */ { 1, { kDown12ToFlatSeq0 } },
+
     };
 
     static constexpr auto BuildDescriptorTable()

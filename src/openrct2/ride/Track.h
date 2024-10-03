@@ -36,8 +36,10 @@ enum class TrackRoll : uint8_t
 enum class TrackPitch : uint8_t
 {
     None = 0,
+    Up12 = 1,
     Up25 = 2,
     Up60 = 4,
+    Down12 = 5,
     Down25 = 6,
     Down60 = 8,
     Up90 = 10,
@@ -140,6 +142,8 @@ enum class TrackGroup : uint8_t
 
     diagBrakes,
     diagBlockBrakes,
+
+    ShallowSlopes,
 
     count,
 };
@@ -626,7 +630,14 @@ namespace OpenRCT2::TrackElemType
     constexpr track_type_t DiagBrakes = 337;
     constexpr track_type_t DiagBlockBrakes = 338;
 
-    constexpr track_type_t Count = 339;
+	constexpr track_type_t Up12 = 339;
+    constexpr track_type_t Down12 = 340;
+    constexpr track_type_t FlatToUp12 = 341;
+    constexpr track_type_t FlatToDown12 = 342;
+    constexpr track_type_t Up12ToFlat = 343;
+    constexpr track_type_t Down12ToFlat = 344;	
+
+    constexpr track_type_t Count = 345;
     constexpr track_type_t None = 65535;
 
 }; // namespace OpenRCT2::TrackElemType
